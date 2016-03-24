@@ -1,0 +1,15 @@
+<Table name="Class1">
+<Integer name="num" value="10" />
+<Integer name="numArray" value="20" size="10"/>
+<Float name="decimal" value="2.5" />
+<Float name="decimalArray" value="3.5" size="10"/>
+<String name="Greeting" value="HelloWorld" />
+<String name="strArray" value="Foo" size="10" />
+<Vector name="Vec" value="0.0 1.0 2.0 3.0" />
+<Vector name="VecArray" value="3.0 2.0 1.0 0.0" size="10" />
+<Matrix name="Mat" value="1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0" />	
+<Matrix name="MatArray" value="2.0 2.0 2.0 2.0 2.0 2.0 2.0 2.0 2.0 2.0 2.0 2.0 2.0 2.0 2.0 2.0" size="10" />
+<Table name="Other">
+<Integer name="num2" value="10" />
+</Table>
+</Table>

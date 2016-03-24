@@ -1,0 +1,16 @@
+<World name="World">
+<Sector name="Scene1">
+<Entity class="Entity" name="Monster">
+<Integer name="health" value="100"/>
+</Entity>
+<Entity class="Entity" name="Player">
+<String name="name" value="jon"/>
+</Entity>
+</Sector>
+<Sector name="Scene2">
+<Entity class="Entity" name="Cube">
+<Vector name="Position" value="0.0 1.0 2.0 3.0" />
+<Float name="ScaleFactor" value="0.1" />
+</Entity>
+</Sector>
+</World>
