@@ -26,5 +26,6 @@
     <ClCompile Include="TestHelper.cpp" />
     <ClCompile Include="StringSharedData.cpp" />
     <ClCompile Include="FactoryTest.cpp" />
+    <ClCompile Include="WorldTest.cpp" />
   </ItemGroup>
 </Project>

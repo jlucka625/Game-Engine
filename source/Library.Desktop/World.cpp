@@ -7,7 +7,7 @@ namespace Library
 	Vector<std::string> World::sPerscribedAttributes;
 
 	World::World() :
-		mSectors(), mName(""), mWorldState()
+		mName(""), mWorldState(), mGameClock()
 	{
 		mWorldState.World = this;
 		InitializeAttributes();
@@ -16,7 +16,9 @@ namespace Library
 	void World::InitializeAttributes()
 	{
 		AddExternalAttribute("Name", 1, &mName);
-		AddNestedScope("Sectors", mSectors);
+		Datum& datum = Append("Sectors");
+		datum.SetType(Datum::DatumType::Table);
+		sPerscribedAttributes.PushBack("Sectors");
 	}
 
 	Vector<std::string>& World::PrescribedAttributes() const
@@ -41,7 +43,7 @@ namespace Library
 
 	Sector * World::CreateSector(const std::string& instanceName)
 	{
-		Sector* sector = Factory<Sector>::Create("Sector")->As<Sector>();
+		Sector* sector = new Sector();
 		sector->SetWorld(this);
 		sector->SetName(instanceName);
 		return sector;
@@ -49,6 +51,7 @@ namespace Library
 
 	void World::Update()
 	{
+		mGameClock.UpdateGameTime(mWorldState.GetGameTime());
 		Datum* datum = Find("Sectors");
 		for (std::uint32_t i = 0; i < datum->Size(); ++i)
 		{
@@ -56,5 +59,10 @@ namespace Library
 			mWorldState.Sector = currentSector;
 			currentSector->Update(mWorldState);
 		}
+	}
+
+	void World::Clear()
+	{
+		sPerscribedAttributes.Clear();
 	}
 }

@@ -227,6 +227,7 @@
     <ClCompile Include="StringSharedData.cpp" />
     <ClCompile Include="TestHelper.cpp" />
     <ClCompile Include="VectorTest.cpp" />
+    <ClCompile Include="WorldTest.cpp" />
     <ClCompile Include="XmlParseMasterTest.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

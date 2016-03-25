@@ -12,12 +12,18 @@ namespace UnitTestLibraryDesktop
 #if defined(DEBUG) | defined(_DEBUG)
 		TEST_METHOD_INITIALIZE(Initialize)
 		{
+			World::Clear();
+			Sector::Clear();
+			Entity::Clear();
 			_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF);
 			_CrtMemCheckpoint(&sStartMemState);
 		}
 
 		TEST_METHOD_CLEANUP(Cleanup)
 		{
+			World::Clear();
+			Sector::Clear();
+			Entity::Clear();
 			_CrtMemState endMemState, diffMemState;
 			_CrtMemCheckpoint(&endMemState);
 			if (_CrtMemDifference(&diffMemState, &sStartMemState, &endMemState))
@@ -238,7 +244,42 @@ namespace UnitTestLibraryDesktop
 
 		TEST_METHOD(TestParseWorldFromFile)
 		{
+			XmlParseHelperTable::ScopeSharedData data;
+			XmlParseHelperTable helper;
+			XmlParseMaster master(data);
+			master.AddHelper(helper);
 
+			master.ParseFromFile("content/world.xml");
+			XmlParseMaster::SharedData* d = &master.GetSharedData();
+			XmlParseHelperTable::ScopeSharedData* data2 = d->As<XmlParseHelperTable::ScopeSharedData>();
+			Scope* s = data2->GetScope();
+			World* world = s->Find("World")->Get<Scope*>()->As<World>();
+			Assert::IsNotNull(world);
+
+			Sector* sector = world->Find("Sectors")->Get<Scope*>(0)->As<Sector>();
+			Assert::IsNotNull(sector);
+			Assert::IsTrue(sector->Name() == "Scene1");
+			Entity* entity = sector->Find("Entities")->Get<Scope*>(0)->As<Entity>();
+			Assert::IsNotNull(entity);
+			Assert::IsTrue(entity->Name() == "Monster");
+			int health = entity->Find("health")->Get<int>();
+			Assert::IsTrue(health == 100);
+			entity = sector->Find("Entities")->Get<Scope*>(1)->As<Entity>();
+			Assert::IsNotNull(entity);
+			Assert::IsTrue(entity->Name() == "Player");
+			std::string name = entity->Find("name")->Get<std::string>();
+			Assert::IsTrue(name == "jon");
+
+			sector = world->Find("Sectors")->Get<Scope*>(1)->As<Sector>();
+			Assert::IsNotNull(sector);
+			Assert::IsTrue(sector->Name() == "Scene2");
+			entity = sector->Find("Entities")->Get<Scope*>(0)->As<Entity>();
+			Assert::IsNotNull(entity);
+			Assert::IsTrue(entity->Name() == "Cube");
+			glm::vec4 position = entity->Find("Position")->Get<glm::vec4>();
+			Assert::IsTrue(position == glm::vec4(0.0f, 1.0f, 2.0f, 3.0f));
+			float scaleFactors = entity->Find("ScaleFactor")->Get<float>();
+			Assert::IsTrue(scaleFactors == 0.1f);
 		}
 
 	private:

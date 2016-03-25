@@ -32,6 +32,7 @@
 #include "GameTime.h"
 #include "GameClock.h"
 #include "WorldState.h"
+#include "Factory.h"
 #include "Entity.h"
 #include "Sector.h"
 #include "World.h"
@@ -39,4 +40,3 @@
 #include "IXmlParseHelper.h"
 #include "XmlParseMaster.h"
 #include "XmlParseHelperTable.h"
-#include "Factory.h"

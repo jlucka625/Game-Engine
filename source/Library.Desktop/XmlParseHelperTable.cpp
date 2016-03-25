@@ -236,9 +236,9 @@ namespace Library
 		}
 
 		Scope*& scope = userData.GetScope();
-		Sector* sector = scope->As<Sector>();
-		if (!sector)
-			throw std::exception("Scope is not a Sector");
+		Sector* sector = static_cast<Sector*>(scope);
+		/*if (!sector)
+			throw std::exception("Scope is not a Sector");*/
 
 		Entity* entity = sector->CreateEntity(className, instanceName);
 		scope = entity;
@@ -257,12 +257,12 @@ namespace Library
 		}
 
 		Scope*& scope = userData.GetScope();
-		World* world = scope->As<World>();
-		if (!world)
-			throw std::exception("Scope is not a World");
+		World* world = static_cast<World*>(scope);
+		/*if (!world)
+			throw std::exception("Scope is not a World");*/
 
-		world->CreateSector(attributeName);
-		scope = world;
+		Sector* sector = world->CreateSector(attributeName);
+		scope = sector;
 	}
 
 	void XmlParseHelperTable::ParseWorldAttribute(ScopeSharedData& userData, StringMap & data)

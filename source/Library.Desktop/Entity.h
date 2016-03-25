@@ -2,10 +2,14 @@
 namespace Library 
 {
 	class Sector;
+	//! Entity Class
+	/*! A wrapper for a table/attributed scope that represents
+	a game object that will populate the world.*/
 	class Entity : public Attributed
 	{
 		RTTI_DECLARATIONS(Entity, Attributed)
 	public:
+		//! Default Constructor
 		Entity();
 		Entity(const Entity& rhs) = default;
 
@@ -13,21 +17,49 @@ namespace Library
 
 		virtual ~Entity() = default;
 
-		void InitializeAttributes();
+		//! Get Percribed Attribute Names
+		/*! \return A Vector containing the names of each prescribed
+		attribute in this entity.*/
 		virtual Vector<std::string>& PrescribedAttributes() const;
 
+		//! Get Instance Name
+		/*! \return The instance name of this entity.*/
 		const std::string& Name() const;
+
+		//! Set Instance Name
+		/*! \param name The instance name you would like this entity
+		to have.*/
 		void SetName(const std::string& name);
 
+		//! Get World
+		/*! \return The address of the sector that contains
+		this entity.*/
 		Sector* GetSector();
+
+		//! Set World
+		/*! \param world The address of a sector that will
+		now contain this entity.*/
 		void SetSector(Sector* sector);
 
-		void Update(WorldState& worldState);
+		//! Update World
+		/*! Iterates through the contained Actions and calls their
+		update methods.
+		\param worldState A reference to a world state that keeps track
+		of what action is being processed.*/
+		virtual void Update(WorldState& worldState);
+
+		//! Clear the list of Prescribed Attributes
+		static void Clear();
+
+	protected:
+		std::string mName;									//!< The instance name of this entity object
 
 	private:
-		static Vector<std::string> sPerscribedAttributes;
-		std::string mName;
+		//! Initiailize any prescribed attribues this sector may have
+		void InitializeAttributes();
+		static Vector<std::string> sPerscribedAttributes;	//!< Keeps track of the names of each prescribed attribute for this entity
 	};
+	ConcreteFactory(Entity, Entity)
 }
 
 

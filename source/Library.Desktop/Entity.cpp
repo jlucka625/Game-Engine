@@ -46,4 +46,9 @@ namespace Library
 	{
 		UNREFERENCED_PARAMETER(worldState);
 	}
+
+	void Entity::Clear()
+	{
+		sPerscribedAttributes.Clear();
+	}
 }

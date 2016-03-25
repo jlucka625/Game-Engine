@@ -5,9 +5,10 @@ namespace Library
 	RTTI_DEFINITIONS(Sector)
 
 	Vector<std::string> Sector::sPerscribedAttributes;
+	EntityFactory Sector::sEntityFactory;
 
 	Sector::Sector() :
-		mEntities(), mName("")
+		mName("")
 	{
 		InitializeAttributes();
 	}
@@ -15,7 +16,9 @@ namespace Library
 	void Sector::InitializeAttributes()
 	{
 		AddExternalAttribute("Name", 1, &mName);
-		AddNestedScope("Entities", mEntities);
+		Datum& datum = Append("Entities");
+		datum.SetType(Datum::DatumType::Table);
+		sPerscribedAttributes.PushBack("Entities");
 	}
 
 	Vector<std::string>& Sector::PrescribedAttributes() const
@@ -40,7 +43,7 @@ namespace Library
 
 	Entity * Sector::CreateEntity(std::string className, std::string instanceName)
 	{
-		Entity* entity = Factory<Entity>::Create(className)->As<Entity>();
+		Entity* entity = Factory<Entity>::Create(className);
 		entity->SetSector(this);
 		entity->SetName(instanceName);
 		return entity;
@@ -65,5 +68,10 @@ namespace Library
 			worldState.Entity = currentEntity;
 			currentEntity->Update(worldState);
 		}
+	}
+
+	void Sector::Clear()
+	{
+		sPerscribedAttributes.Clear();
 	}
 }
