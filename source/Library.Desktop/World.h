@@ -54,6 +54,8 @@ namespace Library
 		//! Clear the list of Prescribed Attributes
 		static void Clear();
 
+		static const std::string sectorsKey;
+
 	private:
 		static Vector<std::string> sPerscribedAttributes;	//!< Keeps track of the names of each prescribed attribute for this world
 		std::string mName;									//!< The instance name of this world object

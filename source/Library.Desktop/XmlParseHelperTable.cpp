@@ -5,10 +5,8 @@ namespace Library
 #pragma region Scope Shared Data
 	RTTI_DEFINITIONS(XmlParseHelperTable::ScopeSharedData)
 	XmlParseHelperTable::ScopeSharedData::ScopeSharedData() :
-		mScope(new Scope())/*, mScopes()*/
-	{
-		//PushDown(std::string("Base"), &mScope);
-	}
+		mScope(new Scope())
+	{}
 	
 	XmlParseHelperTable::ScopeSharedData::~ScopeSharedData()
 	{
@@ -25,21 +23,9 @@ namespace Library
 		return mScope;
 	}
 
-	/*Stack<XmlParseHelperTable::PairType>& XmlParseHelperTable::ScopeSharedData::GetScopes()
-	{
-		return mScopes;
-	}*/
-
-	/*void XmlParseHelperTable::ScopeSharedData::PushDown(std::string& name, Scope* scope)
-	{
-		mScopes.Push(std::make_pair(name, scope));
-	}*/
-
 	void XmlParseHelperTable::ScopeSharedData::Reset()
 	{
 		mScope->Clear();
-		//mScopes.Clear();
-		//PushDown(std::string("Base"), &mScope);
 	}
 
 #pragma endregion
@@ -67,7 +53,6 @@ namespace Library
 			}
 		}
 
-		//Scope* currentScope = userData.GetScopes().Top().second;
 		Scope* scope = userData.GetScope();
 		Datum& datum = scope->Append(attributeName);
 		for (std::uint32_t i = 0; i < size; ++i)
@@ -213,9 +198,6 @@ namespace Library
 		Scope*& scope = userData.GetScope();
 		Scope& childScope = scope->AppendScope(attributeName);
 		scope = &childScope;
-
-		//Scope* scope = new Scope();
-		//userData.PushDown(attributeName, scope);
 	}
 
 	void XmlParseHelperTable::ParseEntityAttribute(ScopeSharedData& userData, StringMap & data)
@@ -237,9 +219,6 @@ namespace Library
 
 		Scope*& scope = userData.GetScope();
 		Sector* sector = static_cast<Sector*>(scope);
-		/*if (!sector)
-			throw std::exception("Scope is not a Sector");*/
-
 		Entity* entity = sector->CreateEntity(className, instanceName);
 		scope = entity;
 	}
@@ -258,9 +237,6 @@ namespace Library
 
 		Scope*& scope = userData.GetScope();
 		World* world = static_cast<World*>(scope);
-		/*if (!world)
-			throw std::exception("Scope is not a World");*/
-
 		Sector* sector = world->CreateSector(attributeName);
 		scope = sector;
 	}
@@ -282,6 +258,7 @@ namespace Library
 		scope->Adopt(*world, attributeName);
 		scope = world;
 	}
+
 #pragma endregion
 
 #pragma region XML Parse Helper Table
@@ -302,7 +279,7 @@ namespace Library
 	bool XmlParseHelperTable::StartElementHandler(XmlParseMaster::SharedData & userData, const std::string & name, StringMap & data)
 	{
 		ScopeSharedData& sharedData = *userData.As<ScopeSharedData>();
-		if (!&sharedData)
+		if (!&sharedData || !mParseFunctions.ContainsKey(name))
 				return false;
 
 		ParseMap::Iterator it = mParseFunctions.Find(name);
@@ -319,9 +296,6 @@ namespace Library
 
 		Scope*& scope = sharedData.GetScope();
 		scope = scope->GetParent();
-		//PairType pair = sharedData.GetScopes().Top();
-		//sharedData.GetScopes().Pop();
-		//sharedData.GetScopes().Top().second->Adopt(*(pair.second), pair.first);
 		return true;
 	}
 

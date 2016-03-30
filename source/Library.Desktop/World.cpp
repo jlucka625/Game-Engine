@@ -5,6 +5,7 @@ namespace Library
 	RTTI_DEFINITIONS(World)
 
 	Vector<std::string> World::sPerscribedAttributes;
+	const std::string World::sectorsKey = "Sectors";
 
 	World::World() :
 		mName(""), mWorldState(), mGameClock()
@@ -38,7 +39,11 @@ namespace Library
 
 	Datum & World::Sectors() const
 	{
-		return *Find("Sectors");
+		Datum* datum = Find(sectorsKey);
+		if (!datum)
+			throw std::exception("Sectors not found.");
+
+		return *datum;
 	}
 
 	Sector * World::CreateSector(const std::string& instanceName)
@@ -52,10 +57,14 @@ namespace Library
 	void World::Update()
 	{
 		mGameClock.UpdateGameTime(mWorldState.GetGameTime());
-		Datum* datum = Find("Sectors");
+
+		Datum* datum = Find(sectorsKey);
+		if (!datum)
+			return;
+
 		for (std::uint32_t i = 0; i < datum->Size(); ++i)
 		{
-			Sector* currentSector = datum->Get<Scope*>(i)->As<Sector>();
+			Sector* currentSector = static_cast<Sector*>(datum->Get<Scope*>(i));
 			mWorldState.Sector = currentSector;
 			currentSector->Update(mWorldState);
 		}

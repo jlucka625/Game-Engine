@@ -24,7 +24,7 @@ namespace Library
 		class World* World;			//!< Address of world currently being processed
 		class Sector* Sector;		//!< Address of sector currently being processed
 		class Entity* Entity;		//!< Address of entity currently being processed
-		//class Action* Action;		//!< Address of action currently being processed
+		class Action* Action;		//!< Address of action currently being processed
 
 	private:
 		GameTime mGameTime;			//!< A gameTime object to be seeded into this world state

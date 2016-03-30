@@ -15,6 +15,12 @@ namespace UnitTestLibraryDesktop
 			World::Clear();
 			Sector::Clear();
 			Entity::Clear();
+			Action::Clear();
+			ActionList::Clear();
+			ActionIf::Clear();
+			ActionCreateAction::Clear();
+			ActionDestroyAction::Clear();
+			ActionAssign::Clear();
 			_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF);
 			_CrtMemCheckpoint(&sStartMemState);
 		}
@@ -24,6 +30,12 @@ namespace UnitTestLibraryDesktop
 			World::Clear();
 			Sector::Clear();
 			Entity::Clear();
+			Action::Clear();
+			ActionList::Clear();
+			ActionIf::Clear();
+			ActionCreateAction::Clear();
+			ActionDestroyAction::Clear();
+			ActionAssign::Clear();
 			_CrtMemState endMemState, diffMemState;
 			_CrtMemCheckpoint(&endMemState);
 			if (_CrtMemDifference(&diffMemState, &sStartMemState, &endMemState))
@@ -280,6 +292,63 @@ namespace UnitTestLibraryDesktop
 			Assert::IsTrue(position == glm::vec4(0.0f, 1.0f, 2.0f, 3.0f));
 			float scaleFactors = entity->Find("ScaleFactor")->Get<float>();
 			Assert::IsTrue(scaleFactors == 0.1f);
+		}
+
+		TEST_METHOD(TestParseActionFromFile)
+		{
+			ActionIfFactory f1;
+			ActionCreateActionFactory f2;
+			ActionDestroyActionFactory f3;
+			ActionListFactory f4;
+			ActionAssignFactory f5;
+
+			XmlParseHelperTable::ScopeSharedData data;
+			XmlParseHelperTable helper;
+			XmlParseHelperAction actionHelper;
+			XmlParseMaster master(data);
+			master.AddHelper(helper);
+			master.AddHelper(actionHelper);
+
+			master.ParseFromFile("content/action.xml");
+			XmlParseMaster::SharedData* d = &master.GetSharedData();
+			XmlParseHelperTable::ScopeSharedData* data2 = d->As<XmlParseHelperTable::ScopeSharedData>();
+			Scope* s = data2->GetScope();
+			World* world = s->Find("World")->Get<Scope*>()->As<World>();
+			Assert::IsNotNull(world);
+
+			Sector* sector = world->Find("Sectors")->Get<Scope*>(0)->As<Sector>();
+			Assert::IsNotNull(sector);
+			Assert::IsTrue(sector->Name() == "Scene1");
+			Entity* entity = sector->Find("Entities")->Get<Scope*>(0)->As<Entity>();
+			Assert::IsNotNull(entity);
+			Assert::IsTrue(entity->Name() == "Monster");
+
+			ActionIf* actionIf = entity->Find("Actions")->Get<Scope*>(0)->As<ActionIf>();
+			Assert::IsNotNull(actionIf);
+			Assert::IsTrue(actionIf->Name() == "SampleIf");
+			int condition = actionIf->Find("Condition")->Get<int>();
+			Assert::IsTrue(condition == 1);
+
+			ActionList* actionList = actionIf->Find("Then")->Get<Scope*>(0)->As<ActionList>();
+			Assert::IsNotNull(actionList);
+			Action* action = actionList->Find("Actions")->Get<Scope*>(0)->As<Action>();
+			Assert::IsTrue(action->Name() == "Create1");
+			Assert::IsTrue(action->Is("ActionCreateAction"));
+			action = actionList->Find("Actions")->Get<Scope*>(1)->As<Action>();
+			Assert::IsTrue(action->Name() == "Destroy1");
+			Assert::IsTrue(action->Is("ActionDestroyAction"));
+
+			actionList = actionIf->Find("Else")->Get<Scope*>(0)->As<ActionList>();
+			Assert::IsNotNull(actionList);
+			action = actionList->Find("Actions")->Get<Scope*>(0)->As<Action>();
+			Assert::IsTrue(action->Name() == "Create1");
+			Assert::IsTrue(action->Is("ActionCreateAction"));
+			action = actionList->Find("Actions")->Get<Scope*>(1)->As<Action>();
+			Assert::IsTrue(action->Name() == "Destroy1");
+			Assert::IsTrue(action->Is("ActionDestroyAction"));
+
+			action = entity->Find("Actions")->Get<Scope*>(1)->As<Action>();
+			Assert::IsTrue(action->Is("ActionAssign"));
 		}
 
 	private:

@@ -12,9 +12,9 @@ namespace Library
 	public:
 		//! Default Constructor
 		Sector();
-		Sector(const Sector& rhs) = default;
+		//Sector(const Sector& rhs) = default;
 
-		Sector& operator=(const Sector& rhs) = default;
+		//Sector& operator=(const Sector& rhs) = default;
 
 		virtual ~Sector() = default;
 
@@ -66,6 +66,8 @@ namespace Library
 
 		//! Clear the list of Prescribed Attributes
 		static void Clear();
+
+		static const std::string entitiesKey;
 
 	private:
 		static Vector<std::string> sPerscribedAttributes;	//!< Keeps track of the names of each prescribed attribute for this sector

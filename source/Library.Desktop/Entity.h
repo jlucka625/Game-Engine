@@ -11,9 +11,9 @@ namespace Library
 	public:
 		//! Default Constructor
 		Entity();
-		Entity(const Entity& rhs) = default;
+		//Entity(const Entity& rhs) = default;
 
-		Entity& operator=(const Entity& rhs) = default;
+		//Entity& operator=(const Entity& rhs) = default;
 
 		virtual ~Entity() = default;
 
@@ -30,6 +30,18 @@ namespace Library
 		/*! \param name The instance name you would like this entity
 		to have.*/
 		void SetName(const std::string& name);
+
+		//! Get Actions
+		/*! \return A Datum of type table that represents an array
+		of action pointers.*/
+		Datum& Actions() const;
+
+		//! Create Actions
+		/*! Instantiates an action and adopts it into this entity
+		scope.
+		\param instanceName The name of this scope instance
+		\return A pointer to the newly created Action*/
+		Action* CreateAction(std::string className, std::string instanceName);
 
 		//! Get World
 		/*! \return The address of the sector that contains
@@ -50,6 +62,8 @@ namespace Library
 
 		//! Clear the list of Prescribed Attributes
 		static void Clear();
+
+		static const std::string actionsKey;
 
 	protected:
 		std::string mName;									//!< The instance name of this entity object

@@ -19,6 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Action.cpp" />
+    <ClCompile Include="ActionAssign.cpp" />
+    <ClCompile Include="ActionCreateAction.cpp" />
+    <ClCompile Include="ActionDestroyAction.cpp" />
+    <ClCompile Include="ActionList.cpp" />
+    <ClCompile Include="ActionListIf.cpp" />
     <ClCompile Include="Attributed.cpp" />
     <ClCompile Include="Datum.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -40,10 +46,17 @@
     <ClCompile Include="Sector.cpp" />
     <ClCompile Include="World.cpp" />
     <ClCompile Include="WorldState.cpp" />
+    <ClCompile Include="XmlParseHelperAction.cpp" />
     <ClCompile Include="XmlParseHelperTable.cpp" />
     <ClCompile Include="XmlParseMaster.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Action.h" />
+    <ClInclude Include="ActionAssign.h" />
+    <ClInclude Include="ActionCreateAction.h" />
+    <ClInclude Include="ActionDestroyAction.h" />
+    <ClInclude Include="ActionList.h" />
+    <ClInclude Include="ActionListIf.h" />
     <ClInclude Include="Attributed.h" />
     <ClInclude Include="Datum.h" />
     <ClInclude Include="Entity.h" />
@@ -62,6 +75,7 @@
     <ClInclude Include="vector.h" />
     <ClInclude Include="World.h" />
     <ClInclude Include="WorldState.h" />
+    <ClInclude Include="XmlParseHelperAction.h" />
     <ClInclude Include="XmlParseHelperTable.h" />
     <ClInclude Include="XmlParseMaster.h" />
   </ItemGroup>

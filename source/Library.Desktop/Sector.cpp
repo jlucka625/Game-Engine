@@ -6,6 +6,7 @@ namespace Library
 
 	Vector<std::string> Sector::sPerscribedAttributes;
 	EntityFactory Sector::sEntityFactory;
+	const std::string Sector::entitiesKey = "Entities";
 
 	Sector::Sector() :
 		mName("")
@@ -16,9 +17,9 @@ namespace Library
 	void Sector::InitializeAttributes()
 	{
 		AddExternalAttribute("Name", 1, &mName);
-		Datum& datum = Append("Entities");
+		Datum& datum = Append(entitiesKey);
 		datum.SetType(Datum::DatumType::Table);
-		sPerscribedAttributes.PushBack("Entities");
+		sPerscribedAttributes.PushBack(entitiesKey);
 	}
 
 	Vector<std::string>& Sector::PrescribedAttributes() const
@@ -38,7 +39,11 @@ namespace Library
 
 	Datum & Sector::Entities() const
 	{
-		return *Find("Entities");
+		Datum* datum = Find(entitiesKey);
+		if (!datum)
+			throw std::exception("Entities not found.");
+
+		return *datum;
 	}
 
 	Entity * Sector::CreateEntity(std::string className, std::string instanceName)
@@ -51,20 +56,32 @@ namespace Library
 
 	World * Sector::GetWorld() const
 	{
+		if (!parent)
+			return nullptr;
+
 		return parent->As<World>();
 	}
 
 	void Sector::SetWorld(World * world)
 	{
-		world->Adopt(*this, "Sectors");
+		if (GetWorld())
+			Orphan();
+
+		if (!world)
+			throw std::exception("World is null");
+
+		world->Adopt(*this, World::sectorsKey);
 	}
 
 	void Sector::Update(WorldState& worldState)
 	{
-		Datum* datum = Find("Entities");
+		Datum* datum = Find(entitiesKey);
+		if (!datum)
+			return;
+
 		for (std::uint32_t i = 0; i < datum->Size(); ++i)
 		{
-			Entity* currentEntity = datum->Get<Scope*>(i)->As<Entity>();
+			Entity* currentEntity = static_cast<Entity*>(datum->Get<Scope*>(i));
 			worldState.Entity = currentEntity;
 			currentEntity->Update(worldState);
 		}
