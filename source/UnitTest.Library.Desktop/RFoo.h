@@ -17,13 +17,14 @@ public:
 	/*! Creates a deep-copy
 	\param rhs The Foo to be copied*/
 	RFoo(const RFoo& rhs);
+	RFoo(RFoo&& rhs);
 
 	/*! Operator "=" Overload
 	Creates a deep-copy
 	\param rhs The Foo to be copied
 	\return A reference to "this" Foo */
 	RFoo& operator=(const RFoo& rhs);
-
+	RFoo& operator=(RFoo&& rhs);
 	//! Equality Overload
 	/*! \param The Foo object to compare against
 	\return A boolean value based on if the two Foo objects share

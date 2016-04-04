@@ -20,6 +20,28 @@ RFoo::RFoo(const RFoo& rhs) :
 
 }
 
+RFoo::RFoo(RFoo&& rhs) :
+	mData(rhs.mData), mMoreData(rhs.mMoreData)
+{
+	rhs.mData = 0;
+	rhs.mMoreData = nullptr;
+}
+
+RFoo& RFoo::operator=(RFoo&& rhs)
+{
+	if (this != &rhs)
+	{
+		delete mMoreData;
+
+		mData = rhs.mData;
+		mMoreData = rhs.mMoreData;
+
+		rhs.mData = 0;
+		rhs.mMoreData = nullptr;
+	}
+	return *this;
+}
+
 RFoo& RFoo::operator=(const RFoo& rhs)
 {
 	if (this != &rhs)

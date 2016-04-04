@@ -22,6 +22,8 @@
     <ClCompile Include="ActionCreateAction.cpp" />
     <ClCompile Include="ActionDestroyAction.cpp" />
     <ClCompile Include="ActionAssign.cpp" />
+    <ClCompile Include="EventPublisher.cpp" />
+    <ClCompile Include="EventQueue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -51,6 +53,10 @@
     <ClInclude Include="ActionCreateAction.h" />
     <ClInclude Include="ActionDestroyAction.h" />
     <ClInclude Include="ActionAssign.h" />
+    <ClInclude Include="EventSubscriber.h" />
+    <ClInclude Include="EventPublisher.h" />
+    <ClInclude Include="Event.h" />
+    <ClInclude Include="EventQueue.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SList.inl" />
@@ -58,5 +64,6 @@
     <None Include="Stack.inl" />
     <None Include="HashMap.inl" />
     <None Include="Factory.inl" />
+    <None Include="Event.inl" />
   </ItemGroup>
 </Project>

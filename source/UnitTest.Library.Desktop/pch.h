@@ -45,6 +45,11 @@
 #include "XmlParseMaster.h"
 #include "IXmlParseHelper.h"
 
+#include "EventSubscriber.h"
+#include "EventPublisher.h"
+#include "Event.h"
+#include "EventQueue.h"
+
 // Headers for CppUnitTest
 #include "CppUnitTest.h"
 

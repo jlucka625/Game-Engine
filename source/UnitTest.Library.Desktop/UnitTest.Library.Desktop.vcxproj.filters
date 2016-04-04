@@ -27,5 +27,6 @@
     <ClCompile Include="StringSharedData.cpp" />
     <ClCompile Include="FactoryTest.cpp" />
     <ClCompile Include="WorldTest.cpp" />
+    <ClCompile Include="EventTest.cpp" />
   </ItemGroup>
 </Project>

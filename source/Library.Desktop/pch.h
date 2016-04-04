@@ -43,6 +43,11 @@
 #include "Sector.h"
 #include "World.h"
 
+#include "EventSubscriber.h"
+#include "EventPublisher.h"
+#include "Event.h"
+#include "EventQueue.h"
+
 #include "IXmlParseHelper.h"
 #include "XmlParseMaster.h"
 #include "XmlParseHelperTable.h"

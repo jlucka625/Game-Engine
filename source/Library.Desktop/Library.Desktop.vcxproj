@@ -28,6 +28,8 @@
     <ClCompile Include="Attributed.cpp" />
     <ClCompile Include="Datum.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="EventPublisher.cpp" />
+    <ClCompile Include="EventQueue.cpp" />
     <ClCompile Include="GameClock.cpp" />
     <ClCompile Include="GameException.cpp" />
     <ClCompile Include="GameTime.cpp" />
@@ -60,6 +62,10 @@
     <ClInclude Include="Attributed.h" />
     <ClInclude Include="Datum.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="Event.h" />
+    <ClInclude Include="EventPublisher.h" />
+    <ClInclude Include="EventQueue.h" />
+    <ClInclude Include="EventSubscriber.h" />
     <ClInclude Include="Factory.h" />
     <ClInclude Include="GameClock.h" />
     <ClInclude Include="GameException.h" />
@@ -80,6 +86,7 @@
     <ClInclude Include="XmlParseMaster.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Event.inl" />
     <None Include="Factory.inl" />
     <None Include="HashMap.inl" />
     <None Include="SList.inl" />
