@@ -1,6 +1,6 @@
 #include "pch.h"
 
-void InitializeWindow(HINSTANCE instance, const std::wstring& className, const std::wstring windowTitle, int showCommand);
+/*void InitializeWindow(HINSTANCE instance, const std::wstring& className, const std::wstring windowTitle, int showCommand);
 LRESULT WINAPI WndProc(HWND windowHandle, UINT message, WPARAM wParam, LPARAM lParam);
 POINT CenterWindow(int windowWidth, int windowHeight);
 void InitializeDirectX();
@@ -22,7 +22,7 @@ ID3D11DepthStencilView* mDepthStencilView;
 
 XMVECTORF32 BackgroundColor = { 0.392f, 0.584f, 0.929f, 1.0f };
 
-using namespace Library;
+//using namespace Library;*/
 
 int WINAPI WinMain(HINSTANCE instance, HINSTANCE previousInstance, LPSTR commandLine, int showCommand)
 {
@@ -31,7 +31,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE previousInstance, LPSTR command
 	UNREFERENCED_PARAMETER(commandLine);
 	UNREFERENCED_PARAMETER(showCommand);
 
-	std::wstring windowClassName = L"RenderingClass";
+	/*std::wstring windowClassName = L"RenderingClass";
 
 	InitializeWindow(instance, windowClassName, L"DirectX Essentials", showCommand);
 	InitializeDirectX();
@@ -53,13 +53,13 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE previousInstance, LPSTR command
 
 			// Game-specific code
 
-			ThrowIfFailed(mSwapChain->Present(0, 0), "IDXGISwapChain::Present() failed.");
+			Library::ThrowIfFailed(mSwapChain->Present(0, 0), "IDXGISwapChain::Present() failed.");
 		}
 	}
 
-	Shutdown(windowClassName);
+	Shutdown(windowClassName);*/
 }
-
+/*
 void InitializeWindow(HINSTANCE instance, const std::wstring& className, const std::wstring windowTitle, int showCommand)
 {
 	ZeroMemory(&mWindow, sizeof(mWindow));
@@ -124,10 +124,10 @@ void InitializeDirectX()
 
 	ID3D11Device* direct3DDevice = nullptr;
 	ID3D11DeviceContext* direct3DDeviceContext = nullptr;
-	ThrowIfFailed(D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, createDeviceFlags, featureLevels, ARRAYSIZE(featureLevels), D3D11_SDK_VERSION, &direct3DDevice, &mFeatureLevel, &direct3DDeviceContext), "D3D11CreateDevice() failed");
+	Library::ThrowIfFailed(D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, createDeviceFlags, featureLevels, ARRAYSIZE(featureLevels), D3D11_SDK_VERSION, &direct3DDevice, &mFeatureLevel, &direct3DDeviceContext), "D3D11CreateDevice() failed");
 
-	ThrowIfFailed(direct3DDevice->QueryInterface(__uuidof(ID3D11Device1), reinterpret_cast<void**>(&mDirect3DDevice)), "ID3D11Device::QueryInterface() failed");
-	ThrowIfFailed(direct3DDeviceContext->QueryInterface(__uuidof(ID3D11DeviceContext1), reinterpret_cast<void**>(&mDirect3DDeviceContext)), "ID3D11Device::QueryInterface() failed");
+	Library::ThrowIfFailed(direct3DDevice->QueryInterface(__uuidof(ID3D11Device1), reinterpret_cast<void**>(&mDirect3DDevice)), "ID3D11Device::QueryInterface() failed");
+	Library::ThrowIfFailed(direct3DDeviceContext->QueryInterface(__uuidof(ID3D11DeviceContext1), reinterpret_cast<void**>(&mDirect3DDeviceContext)), "ID3D11Device::QueryInterface() failed");
 
 	ReleaseObject(direct3DDevice);
 	ReleaseObject(direct3DDeviceContext);
@@ -137,7 +137,7 @@ void InitializeDirectX()
 	mDirect3DDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, multiSamplingCount, &multiSamplingQualityLevels);
 	if (multiSamplingQualityLevels == 0)
 	{
-		throw GameException("Unsupported multi-sampling quality");
+		throw Library::GameException("Unsupported multi-sampling quality");
 	}
 
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc;
@@ -152,14 +152,14 @@ void InitializeDirectX()
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
 	IDXGIDevice* dxgiDevice = nullptr;
-	ThrowIfFailed(mDirect3DDevice->QueryInterface(__uuidof(IDXGIDevice), reinterpret_cast<void**>(&dxgiDevice)), "ID3D11Device::QueryInterface() failed");
+	Library::ThrowIfFailed(mDirect3DDevice->QueryInterface(__uuidof(IDXGIDevice), reinterpret_cast<void**>(&dxgiDevice)), "ID3D11Device::QueryInterface() failed");
 
 	IDXGIAdapter *dxgiAdapter = nullptr;
 	HRESULT hr;
 	if (FAILED(hr = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), reinterpret_cast<void**>(&dxgiAdapter))))
 	{
 		ReleaseObject(dxgiDevice);
-		throw GameException("IDXGIDevice::GetParent() failed retrieving adapter.", hr);
+		throw Library::GameException("IDXGIDevice::GetParent() failed retrieving adapter.", hr);
 	}
 
 	IDXGIFactory2* dxgiFactory = nullptr;
@@ -167,7 +167,7 @@ void InitializeDirectX()
 	{
 		ReleaseObject(dxgiDevice);
 		ReleaseObject(dxgiAdapter);
-		throw GameException("IDXGIAdapter::GetParent() failed retrieving factory.", hr);
+		throw Library::GameException("IDXGIAdapter::GetParent() failed retrieving factory.", hr);
 	}
 
 	DXGI_SWAP_CHAIN_FULLSCREEN_DESC fullScreenDesc;
@@ -181,7 +181,7 @@ void InitializeDirectX()
 		ReleaseObject(dxgiDevice);
 		ReleaseObject(dxgiAdapter);
 		ReleaseObject(dxgiFactory);
-		throw GameException("IDXGIDevice::CreateSwapChainForHwnd() failed.", hr);
+		throw Library::GameException("IDXGIDevice::CreateSwapChainForHwnd() failed.", hr);
 	}
 
 	ReleaseObject(dxgiDevice);
@@ -189,11 +189,11 @@ void InitializeDirectX()
 	ReleaseObject(dxgiFactory);
 
 	ID3D11Texture2D* backBuffer;
-	ThrowIfFailed(mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer)), "IDXGISwapChain::GetBuffer() failed.");
+	Library::ThrowIfFailed(mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer)), "IDXGISwapChain::GetBuffer() failed.");
 	if (FAILED(hr = mDirect3DDevice->CreateRenderTargetView(backBuffer, nullptr, &mRenderTargetView)))
 	{
 		ReleaseObject(backBuffer);
-		throw GameException("IDXGIDevice::CreateRenderTargetView() failed.", hr);
+		throw Library::GameException("IDXGIDevice::CreateRenderTargetView() failed.", hr);
 	}
 
 	ReleaseObject(backBuffer);
@@ -210,8 +210,8 @@ void InitializeDirectX()
 	depthStencilDesc.SampleDesc.Count = multiSamplingCount;
 	depthStencilDesc.SampleDesc.Quality = multiSamplingQualityLevels - 1;
 
-	ThrowIfFailed(mDirect3DDevice->CreateTexture2D(&depthStencilDesc, nullptr, &mDepthStencilBuffer), "IDXGIDevice::CreateTexture2D() failed.");
-	ThrowIfFailed(mDirect3DDevice->CreateDepthStencilView(mDepthStencilBuffer, nullptr, &mDepthStencilView), "IDXGIDevice::CreateDepthStencilView() failed.");
+	Library::ThrowIfFailed(mDirect3DDevice->CreateTexture2D(&depthStencilDesc, nullptr, &mDepthStencilBuffer), "IDXGIDevice::CreateTexture2D() failed.");
+	Library::ThrowIfFailed(mDirect3DDevice->CreateDepthStencilView(mDepthStencilBuffer, nullptr, &mDepthStencilView), "IDXGIDevice::CreateDepthStencilView() failed.");
 
 	D3D11_VIEWPORT viewport;
 	viewport.TopLeftX = 0.0f;
@@ -241,4 +241,4 @@ void Shutdown(const std::wstring& className)
 	ReleaseObject(mDirect3DDevice);
 
 	UnregisterClass(className.c_str(), mWindow.hInstance);
-}
+}*/

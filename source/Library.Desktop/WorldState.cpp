@@ -3,7 +3,7 @@
 namespace Library
 {
 	WorldState::WorldState() :
-		mGameTime()
+		mGameTime(), mEventQueue()
 	{}
 
 	GameTime & WorldState::GetGameTime()
@@ -14,6 +14,11 @@ namespace Library
 	void WorldState::SetGameTime(GameTime& gameTime)
 	{
 		mGameTime = gameTime;
+	}
+
+	EventQueue& WorldState::GetEventQueue()
+	{
+		return mEventQueue;
 	}
 }
 

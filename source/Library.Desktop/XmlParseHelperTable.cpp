@@ -218,6 +218,7 @@ namespace Library
 		}
 
 		Scope*& scope = userData.GetScope();
+		assert(scope->Is("Sector"));
 		Sector* sector = static_cast<Sector*>(scope);
 		Entity* entity = sector->CreateEntity(className, instanceName);
 		scope = entity;
@@ -236,6 +237,7 @@ namespace Library
 		}
 
 		Scope*& scope = userData.GetScope();
+		assert(scope->Is("World"));
 		World* world = static_cast<World*>(scope);
 		Sector* sector = world->CreateSector(attributeName);
 		scope = sector;

@@ -21,6 +21,8 @@ namespace Library
 		to be seeded into the world state.*/
 		void SetGameTime(GameTime& gameTime);
 
+		EventQueue& GetEventQueue();
+
 		class World* World;			//!< Address of world currently being processed
 		class Sector* Sector;		//!< Address of sector currently being processed
 		class Entity* Entity;		//!< Address of entity currently being processed
@@ -28,6 +30,7 @@ namespace Library
 
 	private:
 		GameTime mGameTime;			//!< A gameTime object to be seeded into this world state
+		EventQueue mEventQueue;
 	};
 }
 

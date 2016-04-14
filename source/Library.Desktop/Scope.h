@@ -74,6 +74,7 @@ namespace Library
 		\param name The name that refers to the key where the Datum is stored.
 		\return A reference to the found or newly created Datum.*/
 		Datum& Append(const std::string& name);
+		void Append(const std::string& name, const Datum& datum);
 
 		//! Nest a Scope within this Scope
 		/*! Adds a new Datum of type table to this scope. If a Datum associated with
@@ -133,6 +134,8 @@ namespace Library
 		/*! \param scope A pointer to the scope who's name we are looking for.
 		\return The name of the found scope.*/
 		std::string FindName(const Scope& scope) const;
+
+		const Vector<std::pair<std::string, Datum>*>& GetData() const;
 
 	private:
 		void Reparent(Scope&& rhs);

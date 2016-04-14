@@ -1,4 +1,6 @@
 #pragma once
+#include <thread>
+#include <future>
 namespace Library
 {
 	template <typename MessageT>
@@ -53,11 +55,12 @@ namespace Library
 		//! Get Message
 		/*! \return A reference to the message payload for this
 		event.*/
-		MessageT& Message();
+		const MessageT& Message() const;
 
 	private:
 		static Vector<EventSubscriber*> sSubscribers;		//!< A static vector of subscribers so that all events of this type share the same subscribers
-		MessageT mMessage;									//!< The data that will be sent to subscribers upon this event firing.
+		MessageT mMessage;							//!< The data that will be sent to subscribers upon this event firing.
+		static std::recursive_mutex mMutex;
 	};
 }
 

@@ -1,5 +1,8 @@
 #pragma once
 #include <chrono>
+#include <thread>
+#include <future>
+#include <vector>
 
 namespace Library
 { 
@@ -16,7 +19,7 @@ namespace Library
 		//! Default Constructor
 		/*!\param subscribers The address of a vector of subscribers
 		that want to be notified from this particular event.*/
-		EventPublisher(Vector<EventSubscriber*>* subscribers);
+		EventPublisher(Vector<EventSubscriber*>* subscribers, std::recursive_mutex* mutex);
 
 		//! Copy Constructor
 		/*! \param rhs The EventPublisher to deep-copy.*/
@@ -72,6 +75,7 @@ namespace Library
 		Vector<EventSubscriber*>* mSubscribers;			//!< Pointer to a vector of subscribers to this event
 		TimePoint mTimeEnqueued;						//!< Point in time when this event was enqueued.
 		Milliseconds mDelay;							//!< How long to wait before notifying this event's subscribers
+		std::recursive_mutex* mMutex;
 	};
 }
 

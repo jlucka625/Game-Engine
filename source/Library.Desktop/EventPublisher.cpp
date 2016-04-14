@@ -1,11 +1,13 @@
 #include "pch.h"
 
+using namespace std;
+
 namespace Library
 {
 	RTTI_DEFINITIONS(EventPublisher)
 
-	EventPublisher::EventPublisher(Vector<EventSubscriber*>* subscribers) :
-		mSubscribers(subscribers)
+	EventPublisher::EventPublisher(Vector<EventSubscriber*>* subscribers, std::recursive_mutex* mutex) :
+		mSubscribers(subscribers), mMutex(mutex)
 	{}
 
 	EventPublisher::EventPublisher(EventPublisher && rhs)
@@ -19,6 +21,11 @@ namespace Library
 		{
 			mTimeEnqueued = rhs.mTimeEnqueued;
 			mDelay = rhs.mDelay;
+			mSubscribers = rhs.mSubscribers;
+			mMutex = rhs.mMutex;
+
+			rhs.mSubscribers = nullptr;
+			rhs.mMutex = nullptr;
 		}
 		return *this;
 	}
@@ -41,14 +48,26 @@ namespace Library
 
 	bool EventPublisher::IsExpired(const TimePoint & currentTime) const
 	{
-		return (mTimeEnqueued + mDelay >= currentTime);
+		return (mTimeEnqueued + mDelay <= currentTime);
 	}
 
 	void EventPublisher::Send()
 	{
-		for (auto& subscriber : *mSubscribers)
+		vector<future<void>> futures;
+
+#pragma region Deliver Block
 		{
-			subscriber->Receive(this);
+			lock_guard<std::recursive_mutex> lock(*mMutex);
+			for (auto& subscriber : *mSubscribers)
+			{
+				futures.emplace_back(async(&EventSubscriber::Receive, subscriber, cref(*this)));
+			}
+		}
+#pragma endregion
+
+		for (auto& future : futures)
+		{
+			future.get();
 		}
 	}
 }

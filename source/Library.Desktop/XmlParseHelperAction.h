@@ -48,6 +48,7 @@ namespace Library
 		void ParseConditionAttribute(XmlParseHelperTable::ScopeSharedData& userData, StringMap& data);
 		void ParseThenAttribute(XmlParseHelperTable::ScopeSharedData& userData, StringMap& data);
 		void ParseElseAttribute(XmlParseHelperTable::ScopeSharedData& userData, StringMap& data);
+		void ParseReactionAttribute(XmlParseHelperTable::ScopeSharedData& userData, StringMap& data);
 
 		typedef HashMap<std::string, ParseFunction> ParseMap;
 		ParseMap mParseFunctions;			//!< A HashMap of function pointers to each Element Parse Helper

@@ -1,4 +1,4 @@
-#include "Event.h"
+//#include "Event.h"
 namespace Library
 {
 	template <typename MessageT>
@@ -8,8 +8,11 @@ namespace Library
 	Vector<EventSubscriber*> Event<MessageT>::sSubscribers(0);
 
 	template <typename MessageT>
+	std::recursive_mutex Event<MessageT>::mMutex;
+
+	template <typename MessageT>
 	Event<MessageT>::Event(const MessageT& message) :
-		mMessage(message), EventPublisher(&sSubscribers)
+		mMessage(message), EventPublisher(&sSubscribers, &mMutex)
 	{}
 
 	template<typename MessageT>
@@ -47,23 +50,26 @@ namespace Library
 	template <typename MessageT>
 	void Event<MessageT>::Subscribe(EventSubscriber* subscriber)
 	{
+		std::lock_guard<std::recursive_mutex> lock(mMutex);
 		sSubscribers.PushBack(subscriber);
 	}
 
 	template <typename MessageT>
 	void Event<MessageT>::Unsubscribe(EventSubscriber* subscriber)
 	{
+		std::lock_guard<std::recursive_mutex> lock(mMutex);
 		sSubscribers.Remove(subscriber);
 	}
 
 	template <typename MessageT>
 	void Event<MessageT>::UnsubscribeAll()
 	{
+		std::lock_guard<std::recursive_mutex> lock(mMutex);
 		sSubscribers.Clear();
 	}
 
 	template <typename MessageT>
-	MessageT& Event<MessageT>::Message()
+	const MessageT& Event<MessageT>::Message() const
 	{
 		return mMessage;
 	}

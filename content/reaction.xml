@@ -1,0 +1,27 @@
+<World name="World">
+<Sector name="Scene1">
+<Entity class="Entity" name="Monster">
+<Reaction class="ReactionAttributed" name="JumpReaction" subtype="Jump">
+<Action class="ActionIf" name="SampleIf">
+<Condition value="1"/>
+<Then>
+<Action class="ActionCreateAction" name="Create1" Prototype="ActionList" Target="NewList1"/>
+<Action class="ActionDestroyAction" name="Destroy1" Target="Create1"/>
+</Then>
+<Else>
+<Action class="ActionCreateAction" name="Create1" Prototype="ActionList" Target="NewList2"/>
+<Action class="ActionDestroyAction" name="Destroy1" Target="Create1"/>
+</Else>
+</Action>
+<Action class="ActionAssign" Target="SampleIf" Value="0"/>
+</Reaction>
+<Action class="ActionEvent" name="JumpEvent" subtype="Jump" delay="0">
+<Integer name="JumpHeight" value="100"/>
+</Action>
+</Entity>
+</Sector>
+</World>
+
+
+
+

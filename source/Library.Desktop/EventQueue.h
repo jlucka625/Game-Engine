@@ -1,5 +1,8 @@
 #pragma once
 #include <memory>
+#include <thread>
+#include <future>
+#include <vector>
 
 namespace Library
 {
@@ -53,6 +56,7 @@ namespace Library
 	private:
 		Vector<std::shared_ptr<EventPublisher>> mPublishers;				//!< Vector of publishers in this queue
 		Vector<std::shared_ptr<EventPublisher>> mExpiredPublishers;			//!< Vector of publishers that have expired, been sent, and are waiting to be cleared out from the queue.
+		mutable std::mutex mMutex;
 	};
 }
 

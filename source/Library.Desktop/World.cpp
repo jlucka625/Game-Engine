@@ -14,6 +14,11 @@ namespace Library
 		InitializeAttributes();
 	}
 
+	WorldState& World::GetWorldState()
+	{
+		return mWorldState;
+	}
+
 	void World::InitializeAttributes()
 	{
 		AddExternalAttribute("Name", 1, &mName);
@@ -57,7 +62,7 @@ namespace Library
 	void World::Update()
 	{
 		mGameClock.UpdateGameTime(mWorldState.GetGameTime());
-
+		mWorldState.GetEventQueue().Update(mWorldState.GetGameTime());
 		Datum* datum = Find(sectorsKey);
 		if (!datum)
 			return;

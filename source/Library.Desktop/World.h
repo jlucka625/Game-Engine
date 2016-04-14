@@ -16,6 +16,8 @@ namespace Library
 
 		virtual ~World() = default;
 
+		WorldState& GetWorldState();
+
 		//! Initiailize any prescribed attribues this world may have
 		void InitializeAttributes();
 

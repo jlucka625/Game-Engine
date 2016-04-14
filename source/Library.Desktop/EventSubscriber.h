@@ -20,7 +20,7 @@ namespace Library
 		/*! \param e The EventPublisher that has been fired. 
 		Contains a message with data that the subscriber
 		is interested in.*/
-		virtual void Receive(const EventPublisher* e) = 0;
+		virtual void Receive(const EventPublisher& e) = 0;
 	};
 }
 

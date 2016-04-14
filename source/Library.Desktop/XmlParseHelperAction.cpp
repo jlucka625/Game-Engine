@@ -8,6 +8,7 @@ namespace Library
 		mParseFunctions["Condition"] = &XmlParseHelperAction::ParseConditionAttribute;
 		mParseFunctions["Then"] = &XmlParseHelperAction::ParseThenAttribute;
 		mParseFunctions["Else"] = &XmlParseHelperAction::ParseElseAttribute;
+		mParseFunctions["Reaction"] = &XmlParseHelperAction::ParseReactionAttribute;
 	}
 
 	bool XmlParseHelperAction::StartElementHandler(XmlParseMaster::SharedData & userData, const std::string & name, StringMap & data)
@@ -24,7 +25,7 @@ namespace Library
 	bool XmlParseHelperAction::EndElementHandler(XmlParseMaster::SharedData & userData, const std::string & name)
 	{
 		XmlParseHelperTable::ScopeSharedData& sharedData = *userData.As<XmlParseHelperTable::ScopeSharedData>();
-		if (!&sharedData || (name != "Action" &&
+		if (!&sharedData || (name != "Action" && name != "Reaction" &&
 			name != "Then" && name != "Else"))
 			return false;
 
@@ -45,7 +46,9 @@ namespace Library
 		std::string instanceName = "default";
 		std::string targetName = "default";
 		std::string prototypeName = "default";
-		int value = 0;
+		std::string subtype = "default";
+		int value = -1;
+		int delay = -1;
 
 		for (auto& pair : data)
 		{
@@ -69,11 +72,35 @@ namespace Library
 			{
 				value = std::stoi(pair.second);
 			}
+			else if (pair.first == ReactionAttributed::subtypeKey)
+			{
+				subtype = pair.second;
+			}
+			else if (pair.first == ActionEvent::delayKey)
+			{
+				delay = std::stoi(pair.second);
+			}
 		}
 
 		Scope*& scope = userData.GetScope();
-		Entity* entity = static_cast<Entity*>(scope);
-		Action* action = entity->CreateAction(className, instanceName);
+		
+		Action* action = nullptr;
+		Entity* entity = scope->As<Entity>();
+		if (entity)
+		{
+			action = entity->CreateAction(className, instanceName);
+		}
+		else
+		{
+			ActionList* actionList = scope->As<ActionList>();
+			if (actionList)
+			{
+				action = Factory<Action>::Create(className);
+				actionList->Adopt(*action, Action::actionsKey);
+				action->SetName(instanceName);
+			}
+			else throw std::exception("Scope is neither an entity or action list.");
+		}
 		scope = action;
 		
 		Datum* datum = action->Find(Action::targetKey);
@@ -84,6 +111,12 @@ namespace Library
 
 		datum = action->Find(Action::valueKey);
 		if (datum) { datum->Set(value); }
+
+		datum = action->Find(ActionEvent::delayKey);
+		if (datum) { datum->Set(delay); }
+
+		datum = action->Find(ReactionAttributed::subtypeKey);
+		if (datum) { datum->Set(subtype); }
 
 	}
 
@@ -98,6 +131,7 @@ namespace Library
 			}
 		}
 		Scope*& scope = userData.GetScope();
+		assert(scope->Is("ActionIf"));
 		ActionIf* listIf = static_cast<ActionIf*>(scope);
 		Datum* datum = listIf->Find(ActionIf::conditionKey);
 		if (!datum)
@@ -106,10 +140,44 @@ namespace Library
 		datum->Set(value);
 	}
 
+	void XmlParseHelperAction::ParseReactionAttribute(XmlParseHelperTable::ScopeSharedData & userData, StringMap & data)
+	{
+		std::string className = "default";
+		std::string instanceName = "default";
+		std::string subtype = "default";
+
+		for (auto& pair : data)
+		{
+			if (pair.first == "name")
+			{
+				instanceName = pair.second;
+			}
+			else if (pair.first == "class")
+			{
+				className = pair.second;
+			}
+			else if (pair.first == ReactionAttributed::subtypeKey)
+			{
+				subtype = pair.second;
+			}
+		}
+
+		Scope*& scope = userData.GetScope();
+		Reaction* reaction = Factory<Reaction>::Create(className);
+		scope->Adopt(*reaction, instanceName);
+		scope = reaction;
+
+		Event<EventMessageAttributed>::Subscribe(reaction);
+
+		Datum* datum = reaction->Find(ReactionAttributed::subtypeKey);
+		if (datum) { datum->Set(subtype); }
+	}
+
 	void XmlParseHelperAction::ParseThenAttribute(XmlParseHelperTable::ScopeSharedData & userData, StringMap & data)
 	{
 		UNREFERENCED_PARAMETER(data);
 		Scope*& scope = userData.GetScope();
+		assert(scope->Is("ActionIf"));
 		ActionIf* listIf = static_cast<ActionIf*>(scope);
 		scope = &listIf->ThenList();
 	}
@@ -118,6 +186,7 @@ namespace Library
 	{
 		UNREFERENCED_PARAMETER(data);
 		Scope*& scope = userData.GetScope();
+		assert(scope->Is("ActionIf"));
 		ActionIf* listIf = static_cast<ActionIf*>(scope);
 		scope = &listIf->ElseList();
 	}

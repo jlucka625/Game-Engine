@@ -221,6 +221,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="FooTest.cpp" />
+    <ClCompile Include="ReactionTest.cpp" />
     <ClCompile Include="RFoo.cpp" />
     <ClCompile Include="ScopeTest.cpp" />
     <ClCompile Include="SListTest.cpp" />

@@ -266,4 +266,21 @@ namespace Library
 						return pair->first;
 		return "";
 	}
+
+	const Vector<std::pair<std::string, Datum>*>& Scope::GetData() const
+	{
+		return mOrderList;
+		//return const_cast<Vector<std::pair<std::string, Datum>*>&>(mOrderList);
+	}
+
+	void Scope::Append(const std::string& name, const Datum& datum)
+	{
+		if (name == "")
+			throw std::exception("Cannot use default string as a key");
+
+		bool existed = false;
+		Iterator it = mData.Insert(PairType(name, datum), existed);
+		if (!existed)
+			mOrderList.PushBack(&(*it));
+	}
 }

@@ -28,5 +28,6 @@
     <ClCompile Include="FactoryTest.cpp" />
     <ClCompile Include="WorldTest.cpp" />
     <ClCompile Include="EventTest.cpp" />
+    <ClCompile Include="ReactionTest.cpp" />
   </ItemGroup>
 </Project>
