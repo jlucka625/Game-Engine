@@ -42,7 +42,7 @@ namespace UnitTestLibraryDesktop
 				const RFoo& foo = fooEvent->Message();
 				mMessageReceived = true;
 				mData = const_cast<RFoo&>(foo).Data();
-				Event<FooBar>::Subscribe(&b);
+				Event<FooBar>::Subscribe(b);
 			}
 		}
 
@@ -202,15 +202,15 @@ namespace UnitTestLibraryDesktop
 			FooSubscriber f;
 			RFoo rfoo1(100);
 			std::shared_ptr<Event<RFoo>> ee = std::make_shared<Event<RFoo>>(rfoo1);
-			ee->Subscribe(&f);
+			ee->Subscribe(f);
 			eq.Enqueue(ee, gameTime, ms);
 
-			for (int i = 0; i < 10; ++i)
+			for (int i = 0; i < 500; ++i)
 			{
 				FooSubscriber fs;
 				RFoo rfoo(i);
 				std::shared_ptr<Event<RFoo>> e = std::make_shared<Event<RFoo>>(rfoo);
-				e->Subscribe(&fs);
+				e->Subscribe(fs);
 				eq.Enqueue(e, gameTime, ms);
 			}
 
@@ -219,7 +219,7 @@ namespace UnitTestLibraryDesktop
 			Assert::IsTrue(eq.IsEmpty());
 			Assert::IsFalse(f.b.wasNotified);
 
-			for (int i = 0; i < 10; ++i)
+			for (int i = 0; i < 500; ++i)
 			{
 				FooBar fb(i);
 				std::shared_ptr<Event<FooBar>> e2 = std::make_shared<Event<FooBar>>(fb);
@@ -238,17 +238,17 @@ namespace UnitTestLibraryDesktop
 			EventQueue eq;
 			Milliseconds ms(0);
 			
-			for (int i = 0; i < 10; ++i)
+			for (int i = 0; i < 500; ++i)
 			{
 				EventEnqueuer eqer(gameTime);
 				std::shared_ptr<Event<EventQueue*>> e = std::make_shared<Event<EventQueue*>>(&eq);
-				e->Subscribe(&eqer);
+				e->Subscribe(eqer);
 				eq.Enqueue(e, gameTime, ms);
 				eq.Enqueue(e, gameTime, ms);
 			}	
 
 			eq.Update(gameTime);
-			Assert::IsTrue(eq.Size() == 100);
+			Assert::IsTrue(eq.Size() == 500);
 		}
 
 		TEST_METHOD(TestExceptionNotifyAsync)
@@ -260,9 +260,9 @@ namespace UnitTestLibraryDesktop
 
 			RFoo foo(150);
 			std::shared_ptr<Event<RFoo>> e = std::make_shared<Event<RFoo>>(foo);
-			e->Subscribe(&thrower1);
-			e->Subscribe(&thrower2);
-			e->Subscribe(&thrower3);
+			e->Subscribe(thrower1);
+			e->Subscribe(thrower2);
+			e->Subscribe(thrower3);
 
 			GameClock clock;
 			GameTime gameTime;
@@ -287,18 +287,18 @@ namespace UnitTestLibraryDesktop
 			e.Send();
 			Assert::IsFalse(fooSub.Received());
 
-			e.Subscribe(&fooSub);
+			e.Subscribe(fooSub);
 			e.Send();
 			Assert::IsTrue(fooSub.Received());
 
 			FooSubscriber fooSub2;
-			e.Subscribe(&fooSub2);
-			e.Unsubscribe(&fooSub2);
+			e.Subscribe(fooSub2);
+			e.Unsubscribe(fooSub2);
 			e.Send();
 			Assert::IsTrue(fooSub2.Data() == 0);
 			Assert::IsTrue(fooSub.Data() == 150);
 
-			e.Subscribe(&fooSub2);
+			e.Subscribe(fooSub2);
 			e.UnsubscribeAll();
 			e.Send();
 			Assert::IsFalse(fooSub2.Received());
@@ -311,7 +311,7 @@ namespace UnitTestLibraryDesktop
 			RFoo foo(150);
 			FooSubscriber fooSub;
 			std::shared_ptr<Event<RFoo>> e = std::make_shared<Event<RFoo>>(foo);
-			e->Subscribe(&fooSub);
+			e->Subscribe(fooSub);
 			
 			GameClock clock;
 			GameTime gameTime;
@@ -336,7 +336,7 @@ namespace UnitTestLibraryDesktop
 			eq.Enqueue(e, gameTime, ms);
 
 			FooSubscriber fooSub2;
-			e->Subscribe(&fooSub2);
+			e->Subscribe(fooSub2);
 			eq.Send(e);
 			Assert::IsTrue(eq.IsEmpty());
 			Assert::IsTrue(fooSub2.Received());

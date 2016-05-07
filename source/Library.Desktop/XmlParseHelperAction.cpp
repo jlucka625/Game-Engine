@@ -167,7 +167,7 @@ namespace Library
 		scope->Adopt(*reaction, instanceName);
 		scope = reaction;
 
-		Event<EventMessageAttributed>::Subscribe(reaction);
+		Event<EventMessageAttributed>::Subscribe(*reaction);
 
 		Datum* datum = reaction->Find(ReactionAttributed::subtypeKey);
 		if (datum) { datum->Set(subtype); }

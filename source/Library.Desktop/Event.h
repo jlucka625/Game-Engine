@@ -41,12 +41,12 @@ namespace Library
 		//! Add Subscriber
 		/*! \param subscriber The address of the subscriber to 
 		add to the list of subscribers for this event type.*/
-		static void Subscribe(EventSubscriber* subscriber);
+		static void Subscribe(EventSubscriber& subscriber);
 
 		//! Remove Subscriber
 		/*! \param subscriber The address of the subscriber to
 		remove from the list of subscribers for this event type.*/
-		static void Unsubscribe(EventSubscriber* subscriber);
+		static void Unsubscribe(EventSubscriber& subscriber);
 
 		//! Remove All Subscribers
 		/*! Unsubscribes all subscribers to this event type.*/

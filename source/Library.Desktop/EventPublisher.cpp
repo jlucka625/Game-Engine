@@ -6,13 +6,28 @@ namespace Library
 {
 	RTTI_DEFINITIONS(EventPublisher)
 
-	EventPublisher::EventPublisher(Vector<EventSubscriber*>* subscribers, std::recursive_mutex* mutex) :
-		mSubscribers(subscribers), mMutex(mutex)
+	EventPublisher::EventPublisher(Vector<EventSubscriber*>& subscribers, std::recursive_mutex* mutex) :
+		mSubscribers(subscribers), mMutex(mutex), mTimeEnqueued(), mDelay()
 	{}
 
-	EventPublisher::EventPublisher(EventPublisher && rhs)
+	EventPublisher::EventPublisher(const EventPublisher & rhs) :
+		mSubscribers(rhs.mSubscribers), mMutex(rhs.mMutex), mTimeEnqueued(rhs.mTimeEnqueued), mDelay(rhs.mDelay)
 	{
-		operator=(std::move(rhs));
+	}
+
+	EventPublisher::EventPublisher(EventPublisher && rhs) :
+		mSubscribers(rhs.mSubscribers), mTimeEnqueued(rhs.mTimeEnqueued), mDelay(rhs.mDelay)
+	{
+	}
+
+	EventPublisher & EventPublisher::operator=(const EventPublisher & rhs)
+	{
+		if (this != &rhs)
+		{
+			mTimeEnqueued = rhs.mTimeEnqueued;
+			mDelay = rhs.mDelay;
+		}
+		return *this;
 	}
 
 	EventPublisher & EventPublisher::operator=(EventPublisher && rhs)
@@ -21,11 +36,6 @@ namespace Library
 		{
 			mTimeEnqueued = rhs.mTimeEnqueued;
 			mDelay = rhs.mDelay;
-			mSubscribers = rhs.mSubscribers;
-			mMutex = rhs.mMutex;
-
-			rhs.mSubscribers = nullptr;
-			rhs.mMutex = nullptr;
 		}
 		return *this;
 	}
@@ -58,7 +68,7 @@ namespace Library
 #pragma region Deliver Block
 		{
 			lock_guard<std::recursive_mutex> lock(*mMutex);
-			for (auto& subscriber : *mSubscribers)
+			for (auto& subscriber : mSubscribers)
 			{
 				futures.emplace_back(async(&EventSubscriber::Receive, subscriber, cref(*this)));
 			}

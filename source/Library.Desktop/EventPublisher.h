@@ -19,11 +19,11 @@ namespace Library
 		//! Default Constructor
 		/*!\param subscribers The address of a vector of subscribers
 		that want to be notified from this particular event.*/
-		EventPublisher(Vector<EventSubscriber*>* subscribers, std::recursive_mutex* mutex);
+		EventPublisher(Vector<EventSubscriber*>& subscribers, std::recursive_mutex* mutex);
 
 		//! Copy Constructor
 		/*! \param rhs The EventPublisher to deep-copy.*/
-		EventPublisher(const EventPublisher& rhs) = default;
+		EventPublisher(const EventPublisher& rhs);
 
 		//! Move Constructor
 		/*! \param rhs The EventPublisher to move.*/
@@ -32,7 +32,7 @@ namespace Library
 		//! Copy Assignment Operator
 		/*! \param rhs The EventPublisher to deep-copy.
 		\return The deep-copied EventPublisher*/
-		EventPublisher& operator=(const EventPublisher& rhs) = default;
+		EventPublisher& operator=(const EventPublisher& rhs);
 
 		//! Move Assignment Operator
 		/*! \param rhs The EventPublisher to move.
@@ -72,7 +72,7 @@ namespace Library
 		void Send();
 
 	private:
-		Vector<EventSubscriber*>* mSubscribers;			//!< Pointer to a vector of subscribers to this event
+		Vector<EventSubscriber*>& mSubscribers;			//!< Pointer to a vector of subscribers to this event
 		TimePoint mTimeEnqueued;						//!< Point in time when this event was enqueued.
 		Milliseconds mDelay;							//!< How long to wait before notifying this event's subscribers
 		std::recursive_mutex* mMutex;
